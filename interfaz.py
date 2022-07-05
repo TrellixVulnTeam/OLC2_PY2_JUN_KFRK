@@ -77,8 +77,21 @@ def FunLinearRegre():
             # se hace el entrenamiento del modelo
             regr = linear_model.LinearRegression()
             regr.fit(x,y)
+
+
+            st.markdown('### Gráfica de dispersión')
+            fig, ax = plt.subplots(1,1)
+            fig.suptitle('Gráfica de Dispersión', fontsize="10")
+            ax.grid()
+            ax.set_xlabel(parameters1)
+            ax.set_ylabel(parameters2)
+            ax.scatter(x,y, color='black')
+                    
+            st.pyplot(fig)
+
+
             st.markdown('### Predicción:')
-            if paramPredic != None:
+            if paramPredic is not None:
                 new_min = 0
                 new_max = int(paramPredic)
                 x_new = np.linspace(new_min, new_max,50)
@@ -92,19 +105,7 @@ def FunLinearRegre():
             st.markdown('### Función de tendencia: ')
             funStr = 'Y = '+ str(regr.coef_[0]) +"X"+" + "+str(regr.intercept_)
             st.info(funStr)
-
-            # se realiza el plot
-            plt.xlabel(parameters1)
-            plt.ylabel(parameters2)
-            plt.title("Gráfica de ploteo")
-            plt.scatter(x,y, color='black')
-            plt.plot(x_new,y_pred, color='blue',linewidth=3)
-
-            plt.savefig('tendencia.png')
-            plt.close()
-        
-            image4 = Image.open('tendencia.png')
-            st.image(image4,width=1200,use_column_width='auto')
+               
             st.table(data)
         else:
             st.warning('Los parametros deben de ser diferentes')
@@ -113,13 +114,13 @@ def FunLinearRegre():
 # metodo para obtener el parametro de la X
 def GetParameter1(df:pd.DataFrame):
     options = df.columns.values
-    selectionP = st.selectbox('Parametro 1', options)
+    selectionP = st.selectbox('Parametro 1 para el eje X', options)
     return selectionP
 
 # metodo para obtener el parametro de la Y
 def GetParameter2(df:pd.DataFrame):
     options = df.columns.values
-    selectionP = st.selectbox('Parametro 2', options)
+    selectionP = st.selectbox('Parametro 2 para el eje Y', options)
     return selectionP
 
 
@@ -203,6 +204,17 @@ def FunRegrePol():
             if grade != None:
                 pol_features = PolynomialFeatures(degree=int(grade))
                 x_trans = pol_features.fit_transform(x)
+                
+                st.markdown('### Gráfica de dispersión: ')
+                fig, ax = plt.subplots(1,1)
+                fig.suptitle('Gráfica de Dispersión', fontsize="10")
+                ax.grid()
+                ax.set_xlabel(parameters1)
+                ax.set_ylabel(parameters2)
+                ax.scatter(x,y, color='black')
+                    
+                st.pyplot(fig)
+
 
             # se hace el entrenamiento del modelo
             regr = linear_model.LinearRegression()
@@ -217,7 +229,7 @@ def FunRegrePol():
                 # se hace el seteo del grado y la transformacion del eje x
                 x_transc = pol_features.fit_transform(x_new)
                 y_pred = regr.predict(x_transc)
-                st.info(max(y_pred))
+                st.info(y_pred[y_pred.size-1])
 
 
             funStr = ""
@@ -237,17 +249,7 @@ def FunRegrePol():
             st.markdown('#### Intercepto') 
             st.info(regr.intercept_)
             
-            plt.xlabel(parameters1)
-            plt.ylabel(parameters2)
-            plt.title("Gráfica de ploteo")
-            plt.scatter(x,y, color='black')
-            plt.plot(x_new,y_pred, color='blue',linewidth=3)
-
-            plt.savefig('polinomial.png')
-            plt.close()
-        
-            image4 = Image.open('polinomial.png')
-            st.image(image4,width=1200,use_column_width='auto')
+            
             st.table(data)
         else:
             st.warning('Los parametros deben de ser diferentes')
@@ -348,9 +350,9 @@ def FunArboles():
         playEncoded = le.fit_transform(nameClass)
 
         features = list(zip(*lstEncondedP))
-        print(features)
 
         model = DecisionTreeClassifier().fit(features, playEncoded)
+        st.markdown('### Gráfica del árbol: ')
         plot_tree(model, filled=True)
         plt.savefig('arbol.png')
         #plt.close()
