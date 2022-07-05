@@ -31,7 +31,7 @@ def classify(num):
 
 def main():
     #titulo
-    st.title('proyecto 2 compiladores')
+    st.title('Proyecto 2 compiladores')
     #titulo de sidebar
     st.sidebar.header('Selección del modelo a utilizar: ')
 
@@ -315,6 +315,7 @@ def FunGaussiano():
 
                 st.markdown('### Predicción: ')
                 st.info(predictClass[0])
+                #st.info(predict[0])
 
             except Exception as e:
                 st.warning('error al cargar')       
