@@ -333,39 +333,42 @@ def FunArboles():
         lstColumns = GetParameterGauss(df)
         columnClass = GetClassGauss(df)
 
-        lstContent = []
-        for pf in lstColumns:
-            Tupla = data[pf]
-            lstContent.append(Tupla)
-        
-        nameClass = data[columnClass]
 
-         #utilizamos el encoder
-        le = preprocessing.LabelEncoder()
-        lstEncondedP = []
-        for item in lstContent:
-            Dupla = le.fit_transform(item)
-            lstEncondedP.append(Dupla)
+        if len(lstColumns) >0:
+            lstContent = []
+            for pf in lstColumns:
+                Tupla = data[pf]
+                lstContent.append(Tupla)
+            
+            nameClass = data[columnClass]
 
-        playEncoded = le.fit_transform(nameClass)
+            #utilizamos el encoder
+            le = preprocessing.LabelEncoder()
+            lstEncondedP = []
+            for item in lstContent:
+                Dupla = le.fit_transform(item)
+                lstEncondedP.append(Dupla)
 
-        features = list(zip(*lstEncondedP))
+            playEncoded = le.fit_transform(nameClass)
 
-        model = DecisionTreeClassifier().fit(features, playEncoded)
-        st.markdown('### Gráfica del árbol: ')
-        plot_tree(model, filled=True)
-        plt.savefig('arbol.png')
-        #plt.close()
-        
-        image4 = Image.open('arbol.png')
-        st.image(image4,width=1200,use_column_width='auto')
+            features = list(zip(*lstEncondedP))
+
+            model = DecisionTreeClassifier().fit(features, playEncoded)
+            st.markdown('### Gráfica del árbol: ')
+            plot_tree(model, filled=True)
+            plt.savefig('arbol.png')
+            #plt.close()
+            
+            image4 = Image.open('arbol.png')
+            st.image(image4,width=1200,use_column_width='auto')
+        else:
+            st.warning('Debe seleccionar por lo menos una columna para realizar el algoritmo')
                
 
 def FunRedes():
     data = TypeArchi()
     if data is not None:
         # leemos el archivo
-        data = pd.read_csv(uploaded_file)
         df = pd.DataFrame(data)
 
         # obtenemos la lista de parametros
@@ -418,7 +421,10 @@ def FunRedes():
                 st.markdown('### Prediccion')
                 st.info(predictionClass[0])
             except Exception as e:
-                st.warning('error al cargar')  
+                st.warning('error al cargar')
+
+        else:
+            st.warning('Debe seleccionar por lo menos una columna para realizar el algoritmo')
 
 if __name__ == '__main__':
     main()
